@@ -1,4 +1,13 @@
-add_executable(game main.cpp)
+add_executable(game
+main.cpp
+classes/player/Player.cpp
+classes/enemy/Enemy.cpp
+classes/enemy/EnemySpawner.cpp
+classes/background/Map.cpp
+classes/magic/Fireball.cpp
+classes/background/BackgroundDecorator.cpp
+classes/background/DecorSpawner.cpp
+)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 
@@ -6,8 +15,20 @@ find_package(Freetype REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(SFML 2 COMPONENTS window graphics system REQUIRED)
 
-target_include_directories(game PRIVATE ${SFML_INCLUDE_DIR})
+target_include_directories(game
+    PRIVATE
+        ${SFML_INCLUDE_DIR}
+        ${FREETYPE_INCLUDE_DIRS}
+        ${JPEG_INCLUDE_DIRS}
+)
+
 target_compile_features(game PUBLIC cxx_std_17)
 target_compile_definitions(game PRIVATE SFML_STATIC)
 
-target_link_libraries(game ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+target_link_libraries(game
+    PRIVATE
+        ${SFML_LIBRARIES}
+        ${SFML_DEPENDENCIES}
+        ${FREETYPE_LIBRARIES}
+        ${JPEG_LIBRARIES}
+)
