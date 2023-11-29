@@ -3,8 +3,9 @@ main.cpp
 classes/player/Player.cpp
 classes/enemy/Enemy.cpp
 classes/enemy/EnemySpawner.cpp
-classes/background/Map.cpp
+classes/map/Map.cpp
 classes/magic/Fireball.cpp
+classes/magic/FireballSpawner.cpp
 classes/background/BackgroundDecorator.cpp
 classes/background/DecorSpawner.cpp
 )

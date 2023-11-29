@@ -9,7 +9,8 @@
 #include <iostream>
 #include "./classes/player/Player.h"
 #include "./classes/magic/Fireball.h"
-#include "./classes/background/Map.h"
+#include "./classes/magic/FireballSpawner.h"
+#include "./classes/map/Map.h"
 #include "./classes/enemy/Enemy.h"
 #include "./classes/enemy/EnemySpawner.h"
 #include "./classes/background/BackgroundDecorator.h"
@@ -61,10 +62,9 @@ int main()
     // enemies
     std::vector<Enemy> enemies;
 
-    const float ENEMY_SPAWN_INTERVAL = 0.5f;
+    const float ENEMY_SPAWN_INTERVAL = 0.3f;
     float enemySpawnTimer = ENEMY_SPAWN_INTERVAL;
-
-    EnemySpawner spawner(ENEMY_SPAWN_INTERVAL);
+    EnemySpawner spawner(enemySpawnTimer);
 
     sf::Texture demonTexture;
     if (!demonTexture.loadFromFile("./game/Texture/enemyTexture/demon.png"))
@@ -74,10 +74,13 @@ int main()
 
     // fireballs
     const int maxFireballs = 7;
-    const float spawnInterval = 1.4f;
     float spawnTimer = 0.0f;
-    const float orbitRadius = 240.0f;
     std::vector<Fireball> fireballs;
+
+    const float FIREBALLS_SPAWN_INTERVAL = 1.0f;
+    float fireballSpawnTimer = FIREBALLS_SPAWN_INTERVAL;
+    FireballSpawner fireballSpawner(fireballSpawnTimer);
+
     sf::Texture fireballTexture;
     if (!fireballTexture.loadFromFile("./game/Texture/magicTexture/fireBall.png"))
     {
@@ -116,12 +119,21 @@ int main()
 
         spawnTimer += deltaTime;
 
-        //Fireballs spawn
-        if (spawnTimer >= spawnInterval && fireballs.size() < maxFireballs * 2)
+        // //Fireballs spawn
+        // if (spawnTimer >= FIREBALLS_SPAWN_INTERVAL && fireballs.size() < maxFireballs * 2)
+        // {
+        //     float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / maxFireballs);
+        //     fireballs.emplace_back(fireballTexture, orbitRadius, angle);
+        //     spawnTimer = 0.0f;
+        // }
+        sf::Vector2f playerPosition = player.getPosition();
+
+        auto &fireballs = fireballSpawner.getFireballs();
+        fireballSpawner.update(deltaTime, window, fireballTexture, maxFireballs, playerPosition);
+
+        for (auto &fireball : fireballs)
         {
-            float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / maxFireballs);
-            fireballs.emplace_back(fireballTexture, orbitRadius, angle);
-            spawnTimer = 0.0f;
+            fireball.initialize(playerPosition, deltaTime);
         }
 
         //enemies spawn
@@ -129,11 +141,6 @@ int main()
         spawner.update(deltaTime, window, demonTexture);
 
         //Fireballs movement around Player
-        sf::Vector2f playerCenter = player.getPosition();
-        for (auto &fireball : fireballs)
-        {
-            fireball.update(playerCenter, deltaTime);
-        }
 
         sf::Vector2f movement(0.f, 0.f);
 
@@ -183,7 +190,6 @@ int main()
         const float enemySpeed = 100.0f;
         for (auto &enemy : enemies)
         {
-            sf::Vector2f playerPosition = player.getPosition();
             directionToPlayer = playerPosition - enemy.getPosition();
             sf::Vector2f normalizedDirection = normalize(directionToPlayer);
 
@@ -266,7 +272,7 @@ int main()
             }
         }
 
-        sf::Vector2f playerPosition(window.getSize().x / 2, window.getSize().y / 2);
+        // sf::Vector2f playerPosition(window.getSize().x / 2, window.getSize().y / 2);
 
         //Draws
         window.clear();
@@ -274,12 +280,12 @@ int main()
         player.draw(window);
 
         //These part of code i should rewrite. For these i must add class fireballSpawner and rewrite class filreball
-        for (const auto &fireball : fireballs)
-        {
-            fireball.draw(window);
-        }
+        // for (const auto &fireball : fireballs)
+        // {
+        //     fireball.draw(window);
+        // }
         //
-
+        fireballSpawner.draw(window);
         spawner.draw(window);
         decorationSpawner.draw(window);
 

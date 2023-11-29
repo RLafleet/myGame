@@ -33,19 +33,19 @@ std::array<int, 4> EnemySpawner::countEnemiesByRegion(const sf::RenderWindow &wi
 
     for (const auto &enemy : enemies)
     {
-        if (enemy.getPosition().y - 200 < window.getSize().y / 2)
+        if (enemy.getPosition().y < window.getSize().y / 2)
         {
             counts[0]++;
         }
-        if (enemy.getPosition().y + 200 > window.getSize().y / 2)
+        if (enemy.getPosition().y > window.getSize().y / 2)
         {
             counts[1]++;
         }
-        if (enemy.getPosition().x - 200 < window.getSize().x / 2)
+        if (enemy.getPosition().x < window.getSize().x / 2)
         {
             counts[2]++;
         }
-        if (enemy.getPosition().x + 200 > window.getSize().x / 2)
+        if (enemy.getPosition().x > window.getSize().x / 2)
         {
             counts[3]++;
         }
@@ -60,10 +60,10 @@ void EnemySpawner::spawnEnemy(sf::RenderWindow &window, const sf::Texture &demon
     float randomY = 0.0f;
     auto counts = countEnemiesByRegion(window);
 
-    bool spawnAbove = counts[0] < 11;
-    bool spawnBelow = counts[1] < 11;
-    bool spawnLeft = counts[2] < 11;
-    bool spawnRight = counts[3] < 11;
+    bool spawnAbove = counts[0] < 7;
+    bool spawnBelow = counts[1] < 7;
+    bool spawnLeft = counts[2] < 7;
+    bool spawnRight = counts[3] < 7;
 
     if (spawnAbove && spawnBelow && spawnLeft && spawnRight)
     {
@@ -97,6 +97,19 @@ void EnemySpawner::spawnEnemy(sf::RenderWindow &window, const sf::Texture &demon
     {
         randomX = static_cast<float>(window.getSize().x);
         randomY = static_cast<float>(std::rand() % window.getSize().y);
+    }
+    else
+    {
+        if (std::rand() % 2 == 0)
+        {
+            randomX = static_cast<float>(std::rand() % window.getSize().x);
+            randomY = (std::rand() % 2 == 0) ? 0.0f : static_cast<float>(window.getSize().y);
+        }
+        else
+        {
+            randomX = (std::rand() % 2 == 0) ? 0.0f : static_cast<float>(window.getSize().x);
+            randomY = static_cast<float>(std::rand() % window.getSize().y);
+        }
     }
 
     Enemy newEnemy;

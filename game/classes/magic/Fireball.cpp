@@ -9,7 +9,7 @@ Fireball::Fireball(const sf::Texture &texture, float radius, float initialAngle)
     sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
 }
 
-void Fireball::update(sf::Vector2f center, float deltaTime)
+void Fireball::initialize(sf::Vector2f center, float deltaTime)
 {
     const float orbitSpeed = 110.0f;
     angle += orbitSpeed * deltaTime;

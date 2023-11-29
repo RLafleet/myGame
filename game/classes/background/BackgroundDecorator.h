@@ -5,13 +5,13 @@
 
 class BackgroundDecorator
 {
-  private:
-    sf::Sprite decoration;
+private:
+  sf::Sprite decoration;
 
-  public:
-    void draw(sf::RenderWindow &window) const;
-    void initialize(const sf::Vector2f &position, const sf::Texture &texture);
-    void move(const sf::Vector2f &offset);
+public:
+  void draw(sf::RenderWindow &window) const;
+  void initialize(const sf::Vector2f &position, const sf::Texture &texture);
+  void move(const sf::Vector2f &offset);
 };
 
 #endif // BACKGROUND_DECORATOR_H

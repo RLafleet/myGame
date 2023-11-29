@@ -1,7 +1,7 @@
 // DecorSpawner.cpp
 
 #include "DecorSpawner.h"
-#include <iostream> // for debugging
+#include <iostream>
 
 DecorSpawner::DecorSpawner(float interval) : decorSpawnInterval(interval), decorSpawnTimer(interval) {}
 
