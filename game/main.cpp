@@ -15,89 +15,43 @@
 #include "./classes/enemy/EnemySpawner.h"
 #include "./classes/background/BackgroundDecorator.h"
 #include "./classes/background/DecorSpawner.h"
+#include "./classes/game/Game.h"
 
 sf::Vector2f normalize(const sf::Vector2f &vector);
 
 int main()
 {
     sf::Clock clock;
-    bool invisible = false;
-
     sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(desktopMode, "Survival Game", sf::Style::Fullscreen);
 
-    //map
     Map gameMap;
 
-    //player
-    const int playerSpeed = 200;
+    Game game;
 
-    sf::Texture heroSpDown;
-    if (!heroSpDown.loadFromFile("./game/Texture/playerTexture/heroSpDown.png"))
-    {
-        std::cout << "Failed to load player texture." << std::endl;
-    }
-    sf::Texture heroSpUp;
-    if (!heroSpUp.loadFromFile("./game/Texture/playerTexture/heroSpUp.png"))
-    {
-        std::cout << "Failed to load player texture." << std::endl;
-    }
-    sf::Texture heroSpRight;
-    if (!heroSpRight.loadFromFile("./game/Texture/playerTexture/heroSpRight.png"))
-    {
-        std::cout << "Failed to load player texture." << std::endl;
-    }
-    sf::Texture heroSpLeft;
-    if (!heroSpLeft.loadFromFile("./game/Texture/playerTexture/heroSpLeft.png"))
-    {
-        std::cout << "Failed to load player texture." << std::endl;
-    }
-
-    Player player;
-
-    player.playerTexture(heroSpDown);
-
-    sf::Vector2f directionToPlayer;
-
-    // enemies
-    std::vector<Enemy> enemies;
-
+    Enemy::initializeTexture();
     const float ENEMY_SPAWN_INTERVAL = 0.3f;
     float enemySpawnTimer = ENEMY_SPAWN_INTERVAL;
     EnemySpawner spawner(enemySpawnTimer);
+    std::vector<Enemy> enemies;
 
-    sf::Texture demonTexture;
-    if (!demonTexture.loadFromFile("./game/Texture/enemyTexture/demon.png"))
-    {
-        std::cout << "Failed to load demon texture." << std::endl;
-    }
+    Player player;
+    player.playerInitialize();
+    sf::Vector2f directionToPlayer;
+    std::string side = "down";
+    const int playerSpeed = 400;
 
-    // fireballs
     const int maxFireballs = 7;
     float spawnTimer = 0.0f;
+    Fireball::initializeTexture();
     std::vector<Fireball> fireballs;
 
-    const float FIREBALLS_SPAWN_INTERVAL = 1.0f;
-    float fireballSpawnTimer = FIREBALLS_SPAWN_INTERVAL;
-    FireballSpawner fireballSpawner(fireballSpawnTimer);
-
-    sf::Texture fireballTexture;
-    if (!fireballTexture.loadFromFile("./game/Texture/magicTexture/fireBall.png"))
-    {
-        std::cout << "Failed to load fireball texture." << std::endl;
-    }
+    FireballSpawner fireballSpawner(1.0f);
 
     sf::Vector2f lastPlayerPosition = player.getPosition();
 
-    //decor
     std::vector<BackgroundDecorator> decorations;
-    sf::Texture decorationTexture;
-    if (!decorationTexture.loadFromFile("./game/Texture/backgroundTexture/bush.png"))
-    {
-        std::cout << "Failed to load camp texture." << std::endl;
-    }
-    float spawnTimeDecoration = 0.0f;
-    std::string side = "down";
+    BackgroundDecorator::initializeTexture();
     const float DECORATION_SPAWN_INTERVAL = 1.4f;
     float decorationSpawnTimer = DECORATION_SPAWN_INTERVAL;
 
@@ -106,77 +60,39 @@ int main()
     while (window.isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-        }
-
-        //delta Time
+        window.pollEvent(event);
         const float deltaTime = clock.restart().asSeconds();
 
         spawnTimer += deltaTime;
 
-        // //Fireballs spawn
-        // if (spawnTimer >= FIREBALLS_SPAWN_INTERVAL && fireballs.size() < maxFireballs * 2)
-        // {
-        //     float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / maxFireballs);
-        //     fireballs.emplace_back(fireballTexture, orbitRadius, angle);
-        //     spawnTimer = 0.0f;
-        // }
         sf::Vector2f playerPosition = player.getPosition();
 
         auto &fireballs = fireballSpawner.getFireballs();
-        fireballSpawner.update(deltaTime, window, fireballTexture, maxFireballs, playerPosition);
+        fireballSpawner.update(deltaTime, window, maxFireballs, playerPosition);
 
         for (auto &fireball : fireballs)
         {
             fireball.initialize(playerPosition, deltaTime);
         }
 
-        //enemies spawn
         auto &enemies = spawner.getEnemies();
-        spawner.update(deltaTime, window, demonTexture);
-
-        //Fireballs movement around Player
+        spawner.update(deltaTime, window);
 
         sf::Vector2f movement(0.f, 0.f);
+        player.getMovement(side, movement);
+        game.gameKeys(window);
 
-        //Player movement
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        if (movement.x != 0.f || movement.y != 0.f)
         {
-            player.playerTexture(heroSpDown);
-            side = "down";
-            movement.y += 1.0f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-            player.playerTexture(heroSpLeft);
-            side = "left";
-            movement.x -= 1.0f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            player.playerTexture(heroSpRight);
-            side = "right";
-            movement.x += 1.0f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        {
-            player.playerTexture(heroSpUp);
-            side = "up";
-            movement.y -= 1.0f;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-        {
-            window.close();
+            movement = normalize(movement) * (playerSpeed * deltaTime);
+            for (auto &enemy : enemies)
+            {
+                enemy.move(-movement);
+            }
         }
 
-        // Spawn decoration and move
         auto &decorations = decorationSpawner.getDecorations();
-        decorationSpawner.update(side, deltaTime, window, decorationTexture);
+        decorationSpawner.update(side, deltaTime, window);
         if (movement.x != 0.f || movement.y != 0.f)
         {
             movement = normalize(movement) * (playerSpeed * deltaTime);
@@ -186,7 +102,6 @@ int main()
             }
         }
 
-        //Enemy movement
         const float enemySpeed = 100.0f;
         for (auto &enemy : enemies)
         {
@@ -194,15 +109,6 @@ int main()
             sf::Vector2f normalizedDirection = normalize(directionToPlayer);
 
             enemy.move(normalizedDirection * enemySpeed * deltaTime);
-        }
-
-        if (movement.x != 0.f || movement.y != 0.f)
-        {
-            movement = normalize(movement) * (playerSpeed * deltaTime);
-            for (auto &enemy : enemies)
-            {
-                enemy.move(-movement);
-            }
         }
 
         for (size_t i = 0; i < enemies.size(); ++i)
@@ -214,7 +120,6 @@ int main()
             }
         }
 
-        //Enemy delete
         for (auto it = enemies.begin(); it != enemies.end();)
         {
             sf::Vector2f position = it->getPosition();
@@ -241,7 +146,6 @@ int main()
             }
         }
 
-        //Fireballs delete
         auto fireballIt = fireballs.begin();
         while (fireballIt != fireballs.end())
         {
@@ -272,19 +176,9 @@ int main()
             }
         }
 
-        // sf::Vector2f playerPosition(window.getSize().x / 2, window.getSize().y / 2);
-
-        //Draws
         window.clear();
         gameMap.draw(window);
         player.draw(window);
-
-        //These part of code i should rewrite. For these i must add class fireballSpawner and rewrite class filreball
-        // for (const auto &fireball : fireballs)
-        // {
-        //     fireball.draw(window);
-        // }
-        //
         fireballSpawner.draw(window);
         spawner.draw(window);
         decorationSpawner.draw(window);

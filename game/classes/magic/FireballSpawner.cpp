@@ -1,6 +1,7 @@
-// DecorSpawner.cpp
+// FireballSpawner.cpp
 
 #include "FireballSpawner.h"
+#include "Fireball.h"
 #include <iostream>
 
 FireballSpawner::FireballSpawner(float spawnInterval) : fireballSpawnInterval(spawnInterval), fireballSpawnTimer(spawnInterval) {}
@@ -17,23 +18,23 @@ std::vector<Fireball> &FireballSpawner::getFireballs()
     return fireballs;
 }
 
-void FireballSpawner::update(float deltaTime, sf::RenderWindow &window, const sf::Texture &sprite, const int &maxFireballs, const sf::Vector2f &playerCenter)
+void FireballSpawner::update(float deltaTime, sf::RenderWindow &window, const int &maxFireballs, const sf::Vector2f &playerCenter)
 {
     fireballSpawnTimer -= deltaTime;
     if (fireballSpawnTimer <= 0.0f)
     {
-        addFireball(deltaTime, window, sprite, maxFireballs, playerCenter);
+        addFireball(deltaTime, window, maxFireballs, playerCenter);
         fireballSpawnTimer = fireballSpawnInterval;
     }
 }
 
-void FireballSpawner::addFireball(float deltaTime, sf::RenderWindow &window, const sf::Texture &fireballTexture, const int &maxFireballs, const sf::Vector2f &playerCenter)
+void FireballSpawner::addFireball(float deltaTime, sf::RenderWindow &window, const int &maxFireballs, const sf::Vector2f &playerCenter)
 {
     const float orbitRadius = 240.0f;
     if (fireballs.size() < maxFireballs * 2)
     {
         float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / maxFireballs);
-        fireballs.emplace_back(fireballTexture, orbitRadius, angle);
+        fireballs.emplace_back(Fireball::fireballTexture, orbitRadius, angle);
     }
 
     for (auto &fireball : fireballs)

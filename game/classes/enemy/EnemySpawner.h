@@ -7,20 +7,20 @@
 
 class EnemySpawner
 {
-  private:
-    float spawnInterval;
-    float spawnTimer;
-    std::vector<Enemy> enemies;
+private:
+  float spawnInterval;
+  float spawnTimer;
+  std::vector<Enemy> enemies;
 
-  public:
-    EnemySpawner(float interval);
-    void update(float deltaTime, sf::RenderWindow &window, const sf::Texture &demonTexture);
-    void draw(sf::RenderWindow &window);
-    std::vector<Enemy> &getEnemies();
+public:
+  EnemySpawner(float interval);
+  void update(float deltaTime, sf::RenderWindow &window);
+  void draw(sf::RenderWindow &window);
+  std::vector<Enemy> &getEnemies();
 
-  private:
-    std::array<int, 4> countEnemiesByRegion(const sf::RenderWindow &window) const;
-    void spawnEnemy(sf::RenderWindow &window, const sf::Texture &demonTexture);
+private:
+  std::array<int, 4> countEnemiesByRegion(const sf::RenderWindow &window) const;
+  void spawnEnemy(sf::RenderWindow &window);
 };
 
 #endif // ENEMY_SPAWNER_H

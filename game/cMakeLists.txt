@@ -8,6 +8,7 @@ classes/magic/Fireball.cpp
 classes/magic/FireballSpawner.cpp
 classes/background/BackgroundDecorator.cpp
 classes/background/DecorSpawner.cpp
+classes/game/Game.cpp
 )
 
 set(SFML_STATIC_LIBRARIES TRUE)

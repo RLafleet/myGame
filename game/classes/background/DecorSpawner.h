@@ -9,19 +9,19 @@
 
 class DecorSpawner
 {
-  private:
-    float decorSpawnInterval;
-    float decorSpawnTimer;
-    std::vector<BackgroundDecorator> decorations;
+private:
+  float decorSpawnInterval;
+  float decorSpawnTimer;
+  std::vector<BackgroundDecorator> decorations;
 
-  public:
-    DecorSpawner(float interval);
-    void update(std::string side, float deltaTime, sf::RenderWindow &window, const sf::Texture &decorationTexture);
-    void draw(sf::RenderWindow &window);
-    std::vector<BackgroundDecorator> &getDecorations();
+public:
+  DecorSpawner(float interval);
+  void update(std::string &side, float deltaTime, sf::RenderWindow &window);
+  void draw(sf::RenderWindow &window);
+  std::vector<BackgroundDecorator> &getDecorations();
 
-  private:
-    void addDecoration(const std::string &side, sf::RenderWindow &window, const sf::Texture &decorationTexture);
+private:
+  void addDecoration(const std::string &side, sf::RenderWindow &window);
 };
 
 #endif // DECOR_SPAWNER_H

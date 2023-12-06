@@ -1,16 +1,17 @@
 // DecorSpawner.cpp
 
 #include "DecorSpawner.h"
+#include "BackgroundDecorator.h"
 #include <iostream>
 
 DecorSpawner::DecorSpawner(float interval) : decorSpawnInterval(interval), decorSpawnTimer(interval) {}
 
-void DecorSpawner::update(std::string side, float deltaTime, sf::RenderWindow &window, const sf::Texture &decorationTexture)
+void DecorSpawner::update(std::string &side, float deltaTime, sf::RenderWindow &window)
 {
     decorSpawnTimer -= deltaTime;
     if (decorSpawnTimer <= 0.0f)
     {
-        addDecoration(side, window, decorationTexture);
+        addDecoration(side, window);
         decorSpawnTimer = decorSpawnInterval;
     }
 }
@@ -28,7 +29,7 @@ std::vector<BackgroundDecorator> &DecorSpawner::getDecorations()
     return decorations;
 }
 
-void DecorSpawner::addDecoration(const std::string &side, sf::RenderWindow &window, const sf::Texture &decorationTexture)
+void DecorSpawner::addDecoration(const std::string &side, sf::RenderWindow &window)
 {
     // This is a placeholder implementation, adjust based on your requirements
     int randomY = 100;
@@ -56,6 +57,6 @@ void DecorSpawner::addDecoration(const std::string &side, sf::RenderWindow &wind
     }
 
     BackgroundDecorator newDecoration;
-    newDecoration.initialize(sf::Vector2f(randomX, randomY), decorationTexture);
+    newDecoration.initialize(sf::Vector2f(randomX, randomY), BackgroundDecorator::BushTexture);
     decorations.push_back(newDecoration);
 }

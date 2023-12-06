@@ -2,6 +2,17 @@
 
 #include "Fireball.h"
 #include <cmath>
+#include <iostream>
+
+sf::Texture Fireball::fireballTexture;
+
+void Fireball::initializeTexture()
+{
+    if (!fireballTexture.loadFromFile("./game/Texture/magicTexture/fireBall.png"))
+    {
+        std::cout << "Failed to load fireball texture." << std::endl;
+    }
+}
 
 Fireball::Fireball(const sf::Texture &texture, float radius, float initialAngle) : orbitRadius(radius), angle(initialAngle)
 {

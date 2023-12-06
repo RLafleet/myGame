@@ -2,6 +2,17 @@
 
 #include "Enemy.h"
 #include <cmath>
+#include <iostream>
+
+sf::Texture Enemy::demonTexture;
+
+void Enemy::initializeTexture()
+{
+    if (!demonTexture.loadFromFile("./game/Texture/enemyTexture/demon.png"))
+    {
+        std::cout << "Failed to load demon texture." << std::endl;
+    }
+}
 
 sf::Vector2f normalize(const sf::Vector2f &vector)
 {
@@ -13,10 +24,10 @@ sf::Vector2f normalize(const sf::Vector2f &vector)
     return vector;
 }
 
-void Enemy::initialize(const sf::Vector2f &position, const sf::Texture &texture)
+void Enemy::initialize(const sf::Vector2f &position, sf::Texture &demonTexture)
 {
-    sprite.setTexture(texture);
-    sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
+    sprite.setTexture(demonTexture);
+    sprite.setOrigin(demonTexture.getSize().x / 2.0f, demonTexture.getSize().y / 2.0f);
     sprite.setPosition(position);
 }
 

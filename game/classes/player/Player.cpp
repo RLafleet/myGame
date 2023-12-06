@@ -1,6 +1,79 @@
 // Player.cpp
 
 #include "Player.h"
+#include <iostream>
+
+void Player::playerInitialize()
+{
+    if (!heroSpDown.loadFromFile("./game/Texture/playerTexture/heroSpDown.png"))
+    {
+        std::cout << "Failed to load player texture." << std::endl;
+    }
+
+    if (!heroSpUp.loadFromFile("./game/Texture/playerTexture/heroSpUp.png"))
+    {
+        std::cout << "Failed to load player texture." << std::endl;
+    }
+
+    if (!heroSpRight.loadFromFile("./game/Texture/playerTexture/heroSpRight.png"))
+    {
+        std::cout << "Failed to load player texture." << std::endl;
+    }
+
+    if (!heroSpLeft.loadFromFile("./game/Texture/playerTexture/heroSpLeft.png"))
+    {
+        std::cout << "Failed to load player texture." << std::endl;
+    }
+    playerTexture(heroSpDown);
+}
+
+void Player::getMovement(std::string &side, sf::Vector2f &movement)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        setTextureDown();
+        side = "down";
+        movement.y += 1.0f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        setTextureUp();
+        side = "up";
+        movement.y -= 1.0f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        setTextureLeft();
+        side = "left";
+        movement.x -= 1.0f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        setTextureRight();
+        side = "right";
+        movement.x += 1.0f;
+    }
+}
+
+void Player::setTextureUp()
+{
+    playerTexture(heroSpUp);
+}
+
+void Player::setTextureDown()
+{
+    playerTexture(heroSpDown);
+}
+
+void Player::setTextureLeft()
+{
+    playerTexture(heroSpLeft);
+}
+
+void Player::setTextureRight()
+{
+    playerTexture(heroSpRight);
+}
 
 void Player::playerTexture(const sf::Texture &texture)
 {

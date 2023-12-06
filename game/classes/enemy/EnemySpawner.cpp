@@ -1,15 +1,15 @@
 // EnemySpawner.cpp
-
 #include "EnemySpawner.h"
+#include "Enemy.h"
 
 EnemySpawner::EnemySpawner(float interval) : spawnInterval(interval), spawnTimer(interval) {}
 
-void EnemySpawner::update(float deltaTime, sf::RenderWindow &window, const sf::Texture &demonTexture)
+void EnemySpawner::update(float deltaTime, sf::RenderWindow &window)
 {
     spawnTimer -= deltaTime;
     if (spawnTimer <= 0.0f)
     {
-        spawnEnemy(window, demonTexture);
+        spawnEnemy(window);
         spawnTimer = spawnInterval;
     }
 }
@@ -54,7 +54,7 @@ std::array<int, 4> EnemySpawner::countEnemiesByRegion(const sf::RenderWindow &wi
     return counts;
 }
 
-void EnemySpawner::spawnEnemy(sf::RenderWindow &window, const sf::Texture &demonTexture)
+void EnemySpawner::spawnEnemy(sf::RenderWindow &window)
 {
     float randomX = 0.0f;
     float randomY = 0.0f;
@@ -113,6 +113,6 @@ void EnemySpawner::spawnEnemy(sf::RenderWindow &window, const sf::Texture &demon
     }
 
     Enemy newEnemy;
-    newEnemy.initialize(sf::Vector2f(randomX, randomY), demonTexture);
+    newEnemy.initialize(sf::Vector2f(randomX, randomY), Enemy::demonTexture);
     enemies.push_back(newEnemy);
 }
