@@ -9,11 +9,14 @@ private:
   sf::Sprite decoration;
 
 public:
-  static sf::Texture BushTexture;
+  static sf::Texture skull1;
+  static sf::Texture skull2;
+  static sf::Texture skull3;
   static void initializeTexture();
-  void draw(sf::RenderWindow &window) const;
-  void initialize(const sf::Vector2f &position, const sf::Texture &texture);
+  void draw(sf::RenderWindow &window);
+  void initialize(const sf::Vector2f &position);
   void move(const sf::Vector2f &offset);
+  const sf::Sprite &getSprite() const;
 };
 
 #endif // BACKGROUND_DECORATOR_H

@@ -14,15 +14,16 @@ void Fireball::initializeTexture()
     }
 }
 
-Fireball::Fireball(const sf::Texture &texture, float radius, float initialAngle) : orbitRadius(radius), angle(initialAngle)
+Fireball::Fireball(float radius, float initialAngle, int damage)
+    : orbitRadius(radius), angle(initialAngle), damage(damage)
 {
-    sprite.setTexture(texture);
-    sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
+    sprite.setTexture(fireballTexture);
+    sprite.setOrigin(fireballTexture.getSize().x / 2.0f, fireballTexture.getSize().y / 2.0f);
 }
 
 void Fireball::initialize(sf::Vector2f center, float deltaTime)
 {
-    const float orbitSpeed = 110.0f;
+    const float orbitSpeed = 80.0f;
     angle += orbitSpeed * deltaTime;
 
     float radAngle = angle * (3.14159265f / 180.0f);
@@ -45,4 +46,9 @@ void Fireball::draw(sf::RenderWindow &window) const
 float Fireball::getAngle() const
 {
     return angle;
+}
+
+int Fireball::getDamage() const
+{
+    return damage;
 }

@@ -3,6 +3,7 @@
 #include "DecorSpawner.h"
 #include "BackgroundDecorator.h"
 #include <iostream>
+#include <cmath>
 
 DecorSpawner::DecorSpawner(float interval) : decorSpawnInterval(interval), decorSpawnTimer(interval) {}
 
@@ -31,7 +32,6 @@ std::vector<BackgroundDecorator> &DecorSpawner::getDecorations()
 
 void DecorSpawner::addDecoration(const std::string &side, sf::RenderWindow &window)
 {
-    // This is a placeholder implementation, adjust based on your requirements
     int randomY = 100;
     int randomX = 100;
 
@@ -56,7 +56,28 @@ void DecorSpawner::addDecoration(const std::string &side, sf::RenderWindow &wind
         randomX = static_cast<int>(window.getSize().x + 400);
     }
 
-    BackgroundDecorator newDecoration;
-    newDecoration.initialize(sf::Vector2f(randomX, randomY), BackgroundDecorator::BushTexture);
-    decorations.push_back(newDecoration);
+    sf::Vector2f newPos(randomX, randomY);
+    if (!hasNearbyDecorations(newPos, 600.0f))
+    {
+        BackgroundDecorator newDecoration;
+        newDecoration.initialize(sf::Vector2f(randomX, randomY));
+        decorations.push_back(newDecoration);
+    }
+}
+
+bool DecorSpawner::hasNearbyDecorations(const sf::Vector2f &position, float radius)
+{
+    for (const auto &decoration : decorations)
+    {
+        sf::Vector2f decorationPos = decoration.getSprite().getPosition();
+        float distance = std::sqrt((position.x - decorationPos.x) * (position.x - decorationPos.x) +
+                                   (position.y - decorationPos.y) * (position.y - decorationPos.y));
+
+        if (distance < radius)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

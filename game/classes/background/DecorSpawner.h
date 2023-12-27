@@ -13,6 +13,7 @@ private:
   float decorSpawnInterval;
   float decorSpawnTimer;
   std::vector<BackgroundDecorator> decorations;
+  bool hasNearbyDecorations(const sf::Vector2f &position, float radius);
 
 public:
   DecorSpawner(float interval);

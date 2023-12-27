@@ -14,12 +14,12 @@ private:
 
 public:
   FireballSpawner(float spawnInterval);
-  void update(float deltaTime, sf::RenderWindow &window, const int &maxFireballs, const sf::Vector2f &playerCenter);
+  void update(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter);
   void draw(sf::RenderWindow &window);
   std::vector<Fireball> &getFireballs();
 
 private:
-  void addFireball(float deltaTime, sf::RenderWindow &window, const int &maxFireballs, const sf::Vector2f &playerCenter);
+  void addFireball(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter);
 };
 
 #endif // FIREBALL_SPAWNER_H

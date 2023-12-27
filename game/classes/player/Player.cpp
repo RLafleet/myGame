@@ -2,6 +2,8 @@
 
 #include "Player.h"
 #include <iostream>
+#include <cstdlib>
+#include <math.h>
 
 void Player::playerInitialize()
 {
@@ -24,6 +26,8 @@ void Player::playerInitialize()
     {
         std::cout << "Failed to load player texture." << std::endl;
     }
+    healthPoints = 100;
+    level = 7;
     playerTexture(heroSpDown);
 }
 
@@ -79,7 +83,7 @@ void Player::playerTexture(const sf::Texture &texture)
 {
     sprite.setTexture(texture);
     sprite.setOrigin(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f);
-    sprite.setPosition(875, 450);
+    sprite.setPosition(900.f, 480.f);
 }
 
 void Player::draw(sf::RenderWindow &window) const
@@ -107,4 +111,37 @@ bool Player::intersects(const sf::Sprite &other) const
     expandedBounds.width -= 80;
 
     return expandedBounds.intersects(other.getGlobalBounds());
+}
+
+int Player::getHealthPoints() const
+{
+    return healthPoints;
+}
+
+void Player::setHealthPoints(int hp)
+{
+    healthPoints = hp;
+}
+
+int Player::getExpPoints() const
+{
+    return expPoints;
+}
+
+int Player::getLevel() const
+{
+    return level;
+}
+
+int Player::getNumberSkills() const
+{
+    return (level - 1);
+}
+
+void Player::setLevel(int lvl)
+{
+    int k = getLevel();
+    div_t result = div(lvl, 100 * sqrt(k));
+    if (result.quot > level)
+        level = result.quot;
 }

@@ -1,12 +1,21 @@
 // EnemySpawner.cpp
 #include "EnemySpawner.h"
 #include "Enemy.h"
+#include "cstdlib"
+#include "math.h"
 
 EnemySpawner::EnemySpawner(float interval) : spawnInterval(interval), spawnTimer(interval) {}
 
-void EnemySpawner::update(float deltaTime, sf::RenderWindow &window)
+void EnemySpawner::update(float deltaTime, sf::RenderWindow &window, sf::Vector2f &path)
 {
-    spawnTimer -= deltaTime;
+    div_t spawnAmout = div(abs(path.x), 1920);
+    div_t spawnAmout2 = div(abs(path.y), 1080);
+    if (spawnAmout.quot == 0)
+        spawnAmout.quot = 1;
+    if (spawnAmout.quot > spawnAmout2.quot)
+        spawnTimer -= deltaTime * abs(spawnAmout.quot);
+    else
+        spawnTimer -= deltaTime * abs(spawnAmout2.quot);
     if (spawnTimer <= 0.0f)
     {
         spawnEnemy(window);
@@ -29,7 +38,7 @@ std::vector<Enemy> &EnemySpawner::getEnemies()
 
 std::array<int, 4> EnemySpawner::countEnemiesByRegion(const sf::RenderWindow &window) const
 {
-    std::array<int, 4> counts = {0, 0, 0, 0}; // Order: [above, below, left, right]
+    std::array<int, 4> counts = {0, 0, 0, 0};
 
     for (const auto &enemy : enemies)
     {
@@ -60,10 +69,10 @@ void EnemySpawner::spawnEnemy(sf::RenderWindow &window)
     float randomY = 0.0f;
     auto counts = countEnemiesByRegion(window);
 
-    bool spawnAbove = counts[0] < 7;
-    bool spawnBelow = counts[1] < 7;
-    bool spawnLeft = counts[2] < 7;
-    bool spawnRight = counts[3] < 7;
+    bool spawnAbove = counts[0] < 4;
+    bool spawnBelow = counts[1] < 3;
+    bool spawnLeft = counts[2] < 3;
+    bool spawnRight = counts[3] < 3;
 
     if (spawnAbove && spawnBelow && spawnLeft && spawnRight)
     {
@@ -113,6 +122,6 @@ void EnemySpawner::spawnEnemy(sf::RenderWindow &window)
     }
 
     Enemy newEnemy;
-    newEnemy.initialize(sf::Vector2f(randomX, randomY), Enemy::demonTexture);
+    newEnemy.initialize(sf::Vector2f(randomX, randomY));
     enemies.push_back(newEnemy);
 }
