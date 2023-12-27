@@ -27,7 +27,7 @@ void Player::playerInitialize()
         std::cout << "Failed to load player texture." << std::endl;
     }
     healthPoints = 100;
-    level = 7;
+    level = 4;
     playerTexture(heroSpDown);
 }
 

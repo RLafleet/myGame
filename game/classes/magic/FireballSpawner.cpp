@@ -24,23 +24,27 @@ void FireballSpawner::update(float deltaTime, sf::RenderWindow &window, int leve
 {
     div_t speed = div(levelPlayer, 3);
     if (speed.quot == 0)
-        speed.quot == 1;
+        speed.quot = 1;
     fireballSpawnTimer -= deltaTime * (speed.quot);
+    int i = 0;
     if (fireballSpawnTimer <= 0.0f)
     {
-        addFireball(deltaTime, window, levelPlayer, playerCenter);
+        i++;
+        if (i == 30)
+            i = 1;
+        addFireball(deltaTime, window, levelPlayer, playerCenter, i);
         fireballSpawnTimer = fireballSpawnInterval;
     }
 }
 
-void FireballSpawner::addFireball(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter)
+void FireballSpawner::addFireball(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter, int &i)
 {
     const float orbitRadius = 240.0f;
     int damageFireball = 1;
     levelPlayer += 3;
     if (fireballs.size() < levelPlayer)
     {
-        float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / levelPlayer);
+        float angle = fireballs.empty() ? 0.0f : fireballs.back().getAngle() + (360.0f / levelPlayer) + (i * 12);
         fireballs.emplace_back(orbitRadius, angle, damageFireball);
     }
     for (auto &fireball : fireballs)

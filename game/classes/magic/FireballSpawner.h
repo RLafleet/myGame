@@ -19,7 +19,7 @@ public:
   std::vector<Fireball> &getFireballs();
 
 private:
-  void addFireball(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter);
+  void addFireball(float deltaTime, sf::RenderWindow &window, int levelPlayer, const sf::Vector2f &playerCenter, int &i);
 };
 
 #endif // FIREBALL_SPAWNER_H

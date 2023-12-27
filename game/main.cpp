@@ -367,7 +367,7 @@ int main()
                 }
             }
             window.clear();
-            if (path.x > 1920 * 1 || path.y < -1920 * 10 || path.y > 1080 * 10 || path.x < -1080 * 10)
+            if (path.x > 1920 * 10 || path.y < -1920 * 10 || path.y > 1080 * 10 || path.x < -1080 * 10)
             {
                 window.draw(scoreText);
                 window.draw(winSprite);
